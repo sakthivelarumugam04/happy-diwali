@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Sans:wght@400;500;600;700&display=swap');
+
+:root{font-family:'DM Sans',sans-serif;color:#fff7e9;background:#100719;font-synthesis:none;text-rendering:optimizeLegibility;scroll-behavior:smooth}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-width:320px;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button{font:inherit}
+main{position:relative;isolation:isolate;background:linear-gradient(180deg,#100719 0%,#1c0b23 48%,#100719 100%)}
+.scene{position:fixed;inset:0;z-index:-2;pointer-events:none}
+.scene canvas{display:block}
+.ambient-glow{position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 50% 42%,transparent 15%,rgba(12,4,18,.18) 65%,#100719 100%)}
+.light-string{position:fixed;top:0;left:0;right:0;height:42px;z-index:4;display:flex;justify-content:space-around;padding:0 3%;pointer-events:none}
+.light-string:before{content:"";position:absolute;top:0;left:0;width:100%;height:20px;border-top:1px solid #b9854b;border-radius:50%}
+.light-string span{position:relative;margin-top:16px;width:7px;height:11px;border-radius:50% 50% 45% 45%;background:#ffcf6a;box-shadow:0 0 8px #ffb342,0 0 20px #ff9e38;animation:twinkle 1.7s ease-in-out infinite alternate;animation-delay:calc(var(--i)*-.13s)}
+.scroll-progress{position:fixed;z-index:8;top:0;left:0;width:100%;height:2px;background:#ffffff18}
+.scroll-progress span{display:block;width:100%;height:100%;background:#ffc36d;transform-origin:left}
+.topbar{position:fixed;z-index:7;top:38px;left:5.5%;right:5.5%;display:flex;justify-content:space-between;align-items:center}
+.brand{font-family:'Cormorant Garamond',serif;font-size:24px;letter-spacing:.04em;color:#ffd48c}
+.brand span{color:#fff7e9}
+.sound-button{background:#ffffff0d;border:1px solid #ffffff2a;color:#fff1dc;border-radius:30px;padding:9px 16px;font-size:11px;letter-spacing:.08em;backdrop-filter:blur(10px);cursor:pointer}
+.section{position:relative;min-height:100vh;padding:130px 10vw;display:flex;flex-direction:column;justify-content:center}
+.hero{text-align:center;align-items:center;padding-top:170px}
+.eyebrow,.section-kicker{font-size:10px;letter-spacing:.28em;color:#eabf7c;font-weight:600}
+.hero-title,.celebrate h2,.finale h2{font-family:'Cormorant Garamond',serif;font-weight:400;letter-spacing:-.045em}
+.hero-title{font-size:clamp(4.4rem,10vw,9.5rem);line-height:.82;margin:30px 0 26px;text-shadow:0 8px 50px #120719}
+em{font-weight:400;color:#ffc879}
+.hero-copy{font-size:clamp(13px,1.5vw,16px);line-height:1.9;color:#e2d1c4;max-width:560px}
+.scroll-cue{position:absolute;bottom:52px;display:flex;align-items:center;gap:12px;color:#d9b995;font-size:10px;letter-spacing:.16em;text-transform:uppercase}
+.scroll-cue span{width:1px;height:35px;background:linear-gradient(#ffc879,transparent);animation:scrollLine 1.5s infinite}
+.celebrate{padding-left:16vw;min-height:110vh}
+.section-kicker{position:absolute;top:18%;left:10vw;color:#9f8069}
+.celebrate-copy{max-width:470px;margin-left:auto;margin-right:8%;position:relative}
+.celebrate h2{font-size:clamp(4rem,8vw,7.5rem);line-height:.86;margin:22px 0}
+.celebrate-copy>p:last-child{max-width:370px;color:#d9c8ba;line-height:1.9;font-size:14px}
+.floating-badge{position:absolute;left:17%;top:48%;width:116px;height:116px;border:1px solid #eabf7c7a;border-radius:50%;display:grid;place-content:center;text-align:center;color:#ffc879;font-size:35px;animation:rotate 18s linear infinite}
+.floating-badge small{font:8px 'DM Sans',sans-serif;letter-spacing:.2em;line-height:1.6}
+.quote-section{align-items:center;text-align:center;min-height:90vh}
+.quote-card{max-width:850px;padding:55px 30px 42px;animation:fadeUp .7s ease both}
+.quote-mark{font:100px 'Cormorant Garamond',serif;color:#d69b54;line-height:.6}
+.quote-card p{font:clamp(2rem,5vw,4.2rem)/1.12 'Cormorant Garamond',serif;color:#fff0db;margin:25px 0 35px}
+.quote-dots{display:flex;gap:10px;justify-content:center}
+.quote-dots button{width:6px;height:6px;border-radius:50%;border:0;background:#80634e;padding:0;cursor:pointer}
+.quote-dots button.active{background:#ffc879;box-shadow:0 0 10px #ffc879}
+.finale{min-height:110vh;text-align:center;align-items:center;overflow:hidden}
+.finale-content{max-width:800px;display:flex;align-items:center;flex-direction:column}
+.mandala{font-size:68px;color:#ffc879;line-height:1;margin-bottom:20px;text-shadow:0 0 35px #ff9e38;animation:rotate 35s linear infinite}
+.finale h2{font-size:clamp(4.5rem,11vw,10rem);line-height:.9;margin:24px 0}
+.finale-copy{max-width:570px;font-size:14px;line-height:1.9;color:#e2d1c4}
+.wish-separator{color:#ffc879;letter-spacing:.5em;margin:28px 0 14px}
+.signature{font:italic 25px 'Cormorant Garamond',serif;color:#f1c88e}
+.back-top{margin-top:30px;border-bottom:1px solid #c89a62;padding-bottom:7px;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#e9c28e}
+footer{text-align:center;padding:25px 15px 35px;color:#92765f;font-size:9px;letter-spacing:.2em}
+@keyframes twinkle{from{opacity:.45;filter:brightness(.8)}to{opacity:1;filter:brightness(1.6)}}
+@keyframes rotate{to{transform:rotate(360deg)}}
+@keyframes scrollLine{0%{transform:scaleY(.35);transform-origin:top}70%{transform:scaleY(1);transform-origin:top}100%{transform:scaleY(.2);transform-origin:bottom}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:700px){
+ .section{padding:110px 7vw;min-height:92vh}
+ .topbar{left:6%;right:6%;top:35px}
+ .hero{padding-top:150px}
+ .hero-title{font-size:clamp(4rem,18vw,6.5rem);line-height:.88}
+ .hero-copy{max-width:320px}
+ .desktop-only{display:none}
+ .celebrate{justify-content:center;padding-top:150px}
+ .section-kicker{top:12%;left:7vw;font-size:9px}
+ .celebrate-copy{margin:0;align-self:flex-end;max-width:90%}
+ .celebrate h2{font-size:clamp(4rem,16vw,6rem)}
+ .celebrate-copy>p:last-child{font-size:13px}
+ .floating-badge{left:7%;top:35%;width:88px;height:88px;font-size:27px}
+ .quote-section{min-height:85vh}
+ .quote-card{padding:35px 5px}
+ .quote-card p{font-size:clamp(2.2rem,10vw,3.4rem)}
+ .finale h2{font-size:clamp(4.3rem,17vw,7rem)}
+ .finale-copy{font-size:13px}
+ .light-string{height:34px}
+ .light-string span{width:5px;height:8px}
+}
+@media(prefers-reduced-motion:reduce){
+ *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
