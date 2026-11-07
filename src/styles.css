@@ -571,3 +571,87 @@ footer {
     transition-duration: .01ms !important;
   }
 }
+
+
+.welcome-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background:
+    radial-gradient(circle at center, #44210d 0%, #170d09 55%, #080605 100%);
+  text-align: center;
+}
+
+.welcome-content {
+  max-width: 560px;
+  animation: welcomeFade 1.2s ease both;
+}
+
+.welcome-diya {
+  font-size: 76px;
+  margin-bottom: 24px;
+  animation: diyaGlow 2s ease-in-out infinite alternate;
+}
+
+.welcome-content h1 {
+  color: #fff1d2;
+  font-size: clamp(42px, 8vw, 76px);
+  margin: 18px 0;
+}
+
+.welcome-content h1 em {
+  color: #ffb84d;
+}
+
+.welcome-copy {
+  color: #e5c9a5;
+  line-height: 1.8;
+  margin: 20px auto 30px;
+}
+
+.welcome-button {
+  border: 1px solid #f4b74f;
+  background: linear-gradient(135deg, #f5c36b, #b96a18);
+  color: #241006;
+  padding: 16px 32px;
+  border-radius: 50px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.welcome-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px #e89b3c55;
+}
+
+.welcome-hint {
+  color: #b99b79;
+  font-size: 12px;
+  margin-top: 18px;
+}
+
+@keyframes diyaGlow {
+  from {
+    filter: drop-shadow(0 0 8px #ff9d24);
+  }
+  to {
+    filter: drop-shadow(0 0 28px #ff9d24);
+  }
+}
+
+@keyframes welcomeFade {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -1196,16 +1196,39 @@ const quotes = [
 
 
 
+
+
+
 function App() {
   const [muted, setMuted] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [quoteIndex, setQuoteIndex] = useState(0);
   const [progress, setProgress] = useState(0);
+  const [showWelcome, setShowWelcome] = useState(true);
 
   const crackerAudioRef = useRef(null);
+  const videoRef = useRef(null);
   const userMutedRef = useRef(false);
 
-  // Audio setup and autoplay
+  // Background video autoplay
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    video.muted = true;
+    video.loop = true;
+    video.playsInline = true;
+
+    video.play().catch((error) => {
+      console.log("Video autoplay failed:", error);
+    });
+
+    return () => {
+      video.pause();
+    };
+  }, []);
+
+  // Audio setup
   useEffect(() => {
     const audio = new Audio("/firecracker.mp3");
 
@@ -1227,48 +1250,36 @@ function App() {
     audio.addEventListener("play", handlePlay);
     audio.addEventListener("pause", handlePause);
 
-    // Attempt autoplay immediately
-    const startAudio = async () => {
-      try {
-        await audio.play();
-      } catch (error) {
-        console.log("Autoplay blocked. Waiting for interaction.");
-      }
-    };
-
-    startAudio();
-
-    // Start audio after first interaction if autoplay was blocked
-    const unlockAudio = async () => {
-      if (!userMutedRef.current && audio.paused) {
-        try {
-          await audio.play();
-        } catch (error) {
-          console.log("Unable to start audio:", error);
-        }
-      }
-
-      document.removeEventListener("click", unlockAudio);
-      document.removeEventListener("touchstart", unlockAudio);
-      document.removeEventListener("keydown", unlockAudio);
-    };
-
-    document.addEventListener("click", unlockAudio);
-    document.addEventListener("touchstart", unlockAudio);
-    document.addEventListener("keydown", unlockAudio);
-
     return () => {
       audio.pause();
       audio.removeEventListener("play", handlePlay);
       audio.removeEventListener("pause", handlePause);
-
-      document.removeEventListener("click", unlockAudio);
-      document.removeEventListener("touchstart", unlockAudio);
-      document.removeEventListener("keydown", unlockAudio);
-
       crackerAudioRef.current = null;
     };
   }, []);
+
+  // Enter celebration and start sound
+  const enterCelebration = async () => {
+    const audio = crackerAudioRef.current;
+
+    userMutedRef.current = false;
+    setShowWelcome(false);
+
+    if (audio) {
+      try {
+        await audio.play();
+        setMuted(false);
+      } catch (error) {
+        console.error("Audio playback failed:", error);
+        setMuted(false);
+      }
+    }
+
+    // Start background video too
+    if (videoRef.current) {
+      videoRef.current.play().catch(console.error);
+    }
+  };
 
   // Sound toggle
   const toggleSound = async () => {
@@ -1280,6 +1291,7 @@ function App() {
       try {
         userMutedRef.current = false;
         await audio.play();
+        setMuted(false);
       } catch (error) {
         console.error("Audio playback failed:", error);
       }
@@ -1322,6 +1334,59 @@ function App() {
 
   return (
     <main>
+      {/* Hidden background video */}
+      <video
+        ref={videoRef}
+        src="/firecracker.mp4"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        aria-hidden="true"
+        style={{
+          position: "fixed",
+          width: "1px",
+          height: "1px",
+          opacity: 0,
+          pointerEvents: "none",
+          zIndex: -1
+        }}
+      />
+
+      {/* Welcome screen */}
+      {showWelcome && (
+        <div className="welcome-overlay">
+          <div className="welcome-content">
+            <div className="welcome-diya">🪔</div>
+
+            <p className="eyebrow">
+              A FESTIVAL OF LIGHT
+            </p>
+
+            <h1>
+              Happy <em>Diwali!</em>
+            </h1>
+
+            <p className="welcome-copy">
+              May your life shine with happiness,
+              prosperity and endless beautiful moments.
+            </p>
+
+            <button
+              className="welcome-button"
+              onClick={enterCelebration}
+            >
+              ✦ Enter Celebration ✦
+            </button>
+
+            <p className="welcome-hint">
+              Tap to experience the celebration with sound
+            </p>
+          </div>
+        </div>
+      )}
+
       <div className="scene">
         <Suspense fallback={null}>
           <FestiveScene />
@@ -1467,6 +1532,8 @@ function App() {
     </main>
   );
 }
+
+
 
 
 export default App;
