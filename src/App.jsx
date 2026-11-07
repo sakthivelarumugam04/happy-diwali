@@ -1194,32 +1194,97 @@ const quotes = [
   ["May this festival bring new beginnings,", "beautiful memories and endless joy."]
 ];
 
+
+
 function App() {
-  const [muted, setMuted] = useState(true);
+  const [muted, setMuted] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [quoteIndex, setQuoteIndex] = useState(0);
   const [progress, setProgress] = useState(0);
 
   const crackerAudioRef = useRef(null);
+  const userMutedRef = useRef(false);
 
-  // Play or stop custom firecracker sound
-  const toggleSound = async () => {
-    if (!crackerAudioRef.current) {
-      const audio = new Audio("/firecracker.mp3");
-      audio.loop = true;
-      audio.volume = 0.7;
-      crackerAudioRef.current = audio;
-    }
+  // Audio setup and autoplay
+  useEffect(() => {
+    const audio = new Audio("/firecracker.mp3");
 
-    const audio = crackerAudioRef.current;
+    audio.loop = true;
+    audio.volume = 0.7;
+    audio.preload = "auto";
 
-    if (muted) {
+    crackerAudioRef.current = audio;
+
+    const handlePlay = () => {
+      setIsPlaying(true);
+      setMuted(false);
+    };
+
+    const handlePause = () => {
+      setIsPlaying(false);
+    };
+
+    audio.addEventListener("play", handlePlay);
+    audio.addEventListener("pause", handlePause);
+
+    // Attempt autoplay immediately
+    const startAudio = async () => {
       try {
         await audio.play();
-        setMuted(false);
       } catch (error) {
-        console.error("Unable to play cracker sound:", error);
+        console.log("Autoplay blocked. Waiting for interaction.");
+      }
+    };
+
+    startAudio();
+
+    // Start audio after first interaction if autoplay was blocked
+    const unlockAudio = async () => {
+      if (!userMutedRef.current && audio.paused) {
+        try {
+          await audio.play();
+        } catch (error) {
+          console.log("Unable to start audio:", error);
+        }
+      }
+
+      document.removeEventListener("click", unlockAudio);
+      document.removeEventListener("touchstart", unlockAudio);
+      document.removeEventListener("keydown", unlockAudio);
+    };
+
+    document.addEventListener("click", unlockAudio);
+    document.addEventListener("touchstart", unlockAudio);
+    document.addEventListener("keydown", unlockAudio);
+
+    return () => {
+      audio.pause();
+      audio.removeEventListener("play", handlePlay);
+      audio.removeEventListener("pause", handlePause);
+
+      document.removeEventListener("click", unlockAudio);
+      document.removeEventListener("touchstart", unlockAudio);
+      document.removeEventListener("keydown", unlockAudio);
+
+      crackerAudioRef.current = null;
+    };
+  }, []);
+
+  // Sound toggle
+  const toggleSound = async () => {
+    const audio = crackerAudioRef.current;
+
+    if (!audio) return;
+
+    if (audio.paused) {
+      try {
+        userMutedRef.current = false;
+        await audio.play();
+      } catch (error) {
+        console.error("Audio playback failed:", error);
       }
     } else {
+      userMutedRef.current = true;
       audio.pause();
       audio.currentTime = 0;
       setMuted(true);
@@ -1255,16 +1320,6 @@ function App() {
     return () => clearInterval(id);
   }, []);
 
-  // Audio cleanup
-  useEffect(() => {
-    return () => {
-      if (crackerAudioRef.current) {
-        crackerAudioRef.current.pause();
-        crackerAudioRef.current = null;
-      }
-    };
-  }, []);
-
   return (
     <main>
       <div className="scene">
@@ -1295,7 +1350,7 @@ function App() {
           onClick={toggleSound}
           aria-label="Toggle sound"
         >
-          {muted ? "♫ Sound off" : "♫ Sound on"}
+          {isPlaying ? "♫ Sound on" : "♫ Sound off"}
         </button>
       </header>
 
@@ -1412,5 +1467,6 @@ function App() {
     </main>
   );
 }
+
 
 export default App;
